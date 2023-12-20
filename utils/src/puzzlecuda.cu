@@ -41,7 +41,6 @@ __global__ void puzzle_cuda_bfs(char *memory, int *stats, int *relat_op, int puz
         __syncthreads();
 
         while (progress_flag && !done_flag && !error_flag) {
-            // printf("%d %d / %d\n", threadIdx.x, blockIdx.x, gridDim.x);
             __syncthreads();
 
             if (threadIdx.x < puzzle_size) {
@@ -129,16 +128,10 @@ __global__ void puzzle_cuda_bfs(char *memory, int *stats, int *relat_op, int puz
                             }
                         }
                         if (temp == 0){
-                            #ifdef DEBUG
-                                printf("Block:%d,i=%d,j=%d, cannot be filled. Invalidating\n", blockIdx.x, mat_i+1, mat_j+1);
-                            #endif
                             error_flag = 1;
                             progress_flag = 1;
                         }
                         else if (temp <= puzzle_size){
-                            #ifdef DEBUG
-                                if (blockIdx.x == 0)  printf("i=%d, j=%d, val=%d\n", threadIdx.x / puzzle_size + 1, (threadIdx.x % puzzle_size) + 1, temp);
-                            #endif
                             block_memory[threadIdx.x] = temp;
                             progress_flag = 1;
                         }
